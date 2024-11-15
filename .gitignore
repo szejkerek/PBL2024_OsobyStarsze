@@ -347,3 +347,8 @@ Kinect/Kinect/System.Buffers.dll
 Kinect/Kinect/System.Memory.dll
 Kinect/Kinect/System.Reflection.Emit.Lightweight.dll
 Kinect/Kinect/System.Runtime.CompilerServices.Unsafe.dll
+Kinect/Kinect/Assets/Plugins/onnxruntime.dll
+Kinect/Kinect/Assets/Plugins/onnxruntime.dll.meta
+Kinect/Kinect/Assets/Plugins/System.Buffers.dll
+Kinect/Kinect/Assets/Plugins/System.Buffers.dll.meta
+Kinect/Kinect/Assets/Plugins/System.Memory.dll
