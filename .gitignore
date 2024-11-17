@@ -90,30 +90,30 @@ crashlytics-build.properties
 /VR/[Aa]ssets/Plugins/**/*.xml
 
 # Ignore Azure Kinect SDK and related dependencies for Kinect project
-/Kinect/Assets/Plugins/Microsoft.Azure.Kinect.*.dll
-/Kinect/Assets/Plugins/Microsoft.Azure.Kinect.*.pdb
-/Kinect/Assets/Plugins/Microsoft.Azure.Kinect.*.deps.json
-/Kinect/Assets/Plugins/Microsoft.Azure.Kinect.*.xml
+#/Kinect/Assets/Plugins/Microsoft.Azure.Kinect.*.dll
+#/Kinect/Assets/Plugins/Microsoft.Azure.Kinect.*.pdb
+#/Kinect/Assets/Plugins/Microsoft.Azure.Kinect.*.deps.json
+#/Kinect/Assets/Plugins/Microsoft.Azure.Kinect.*.xml
 
-/Kinect/Assets/Plugins/System.*.dll
-/Kinect/Assets/Plugins/System.*.pdb
-/Kinect/Assets/Plugins/System.*.deps.json
+#/Kinect/Assets/Plugins/System.*.dll
+#/Kinect/Assets/Plugins/System.*.pdb
+#/Kinect/Assets/Plugins/System.*.deps.json
 
 /Kinect/Assets/Plugins/cublas*.dll
 /Kinect/Assets/Plugins/cudart*.dll
 /Kinect/Assets/Plugins/cudnn*.dll
-/Kinect/Assets/Plugins/vcomp140.dll
+#/Kinect/Assets/Plugins/vcomp140.dll
 /Kinect/Assets/Plugins/onnxruntime.dll
-/Kinect/Assets/Plugins/k4abt.dll
-/Kinect/Assets/Plugins/depthengine_2_0.dll
-/Kinect/Assets/Plugins/k4a.dll
-/Kinect/Assets/Plugins/k4arecord.dll
+#/Kinect/Assets/Plugins/k4abt.dll
+#/Kinect/Assets/Plugins/depthengine_2_0.dll
+#/Kinect/Assets/Plugins/k4a.dll
+#/Kinect/Assets/Plugins/k4arecord.dll
 
 # Ignore files copied to the root directory for Kinect project
 /Kinect/cublas64_11.dll
 /Kinect/cublasLt64_11.dll
 /Kinect/cudart64_110.dll
-/Kinect/cudnn64_8.dll
+#/Kinect/cudnn64_8.dll
 /Kinect/cudnn64_cnn_infer64_8.dll
 /Kinect/cudnn64_ops_infer64_8.dll
 /Kinect/onnxruntime.dll
@@ -346,7 +346,7 @@ crashlytics-build.properties
 /Kinect/System.Buffers.dll
 /Kinect/System.Memory.dll
 /Kinect/System.Reflection.Emit.Lightweight.dll
-/Kinect/System.Runtime.CompilerServices.Unsafe.dll
+#/Kinect/System.Runtime.CompilerServices.Unsafe.dll
 /Kinect/Assets/Plugins/onnxruntime.dll
 /Kinect/Assets/Plugins/onnxruntime.dll.meta
 /Kinect/Assets/Plugins/System.Buffers.dll
