@@ -175,7 +175,7 @@ public class AdjustDifficulty : MonoBehaviour
         if (holesManager.levelSelected + 1 == holesManager.Difflevels.Length) //max difficulty level
         {
             holesManager.badElementChance = 60;
-            holesManager.timeInStablePosition = 3.5f;
+            //holesManager.timeInStablePosition = 3.5f;
         }
         else
         {
