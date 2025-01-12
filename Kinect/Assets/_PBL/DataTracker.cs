@@ -33,14 +33,28 @@ public enum AppType
     Kinect,
     VR
 }
-
 public class DataTracker : MonoBehaviour
 {
+    public static DataTracker Instance { get; private set; }
     private string filePath;
     [SerializeField] private AppType appType;
 
+    private GameAnalysisData currentGameData;
+    private ActionData currentActionData;
+
     private void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         string folderPath = Path.Combine(Application.dataPath, "..", "..", "DataAnalysis");
         string timestamp = DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss");
 
@@ -55,16 +69,51 @@ public class DataTracker : MonoBehaviour
         }
     }
 
+    public void StartTrackingActions()
+    {
+        currentActionData = new ActionData
+        {
+            rightHandPositions = new List<Vector3>(),
+            rightHandSpeeds = new List<Vector3>(),
+            leftHandPositions = new List<Vector3>(),
+            leftHandSpeeds = new List<Vector3>()
+        };
+
+        Debug.Log("Started tracking actions.");
+    }
+
+    public void StopTrackingActions()
+    {
+        currentGameData.actions.Add(currentActionData);
+        SaveData(currentGameData);
+        Debug.Log("Stopped tracking actions and saved data.");
+    }
+
+    public void RecordAction(Vector3 rightHandPosition, Vector3 rightHandSpeed, Vector3 leftHandPosition, Vector3 leftHandSpeed)
+    {
+        currentActionData.rightHandPositions.Add(rightHandPosition);
+        currentActionData.rightHandSpeeds.Add(rightHandSpeed);
+        currentActionData.leftHandPositions.Add(leftHandPosition);
+        currentActionData.leftHandSpeeds.Add(leftHandSpeed);
+    }
 
     void Start()
     {
-        GameAnalysisData gameAnalysisData = SampleDataGenerator.GenerateGameData();
-        SaveData(gameAnalysisData);
+        ResetGameData();
+        SaveData(currentGameData);
+    }
+
+    public void ResetGameData()
+    {
+        currentGameData = new GameAnalysisData
+        {
+            actions = new List<ActionData>()
+        };
     }
 
     public void SaveData(GameAnalysisData data)
     {
-        string jsonData = JsonUtilityEx.ToJson(data, true);
+        string jsonData = JsonUtility.ToJson(data, true);
         File.WriteAllText(filePath, jsonData);
         Debug.Log("Data saved to " + filePath);
     }
@@ -74,7 +123,7 @@ public class DataTracker : MonoBehaviour
         if (File.Exists(filePath))
         {
             string jsonData = File.ReadAllText(filePath);
-            return JsonUtilityEx.FromJson<GameAnalysisData>(jsonData);
+            return JsonUtility.FromJson<GameAnalysisData>(jsonData);
         }
         else
         {
