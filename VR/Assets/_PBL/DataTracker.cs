@@ -59,8 +59,7 @@ public class DataTracker : MonoBehaviour
         // Populate action data
         currentActionData.handMovementToObjectTime = 2.5f;
         currentActionData.reactionTime = 1.25f;
-        currentActionData.handReachedDestinationTimestamp =
-            currentActionData.handMovementToObjectTime + currentActionData.reactionTime;
+        currentActionData.handReachedDestinationTimestamp = currentActionData.handMovementToObjectTime + currentActionData.reactionTime;
         currentActionData.handReachedDestination = true;
         currentActionData.rightHandReachedDestination = true;
         currentActionData.leftHandReachedDestination = false;
@@ -121,10 +120,22 @@ public class DataTracker : MonoBehaviour
             return;
         }
 
-        // Record hand data
-        currentActionData.rightHandFrames.Add(rightHandTracker.GetHandFrameData());
-        currentActionData.leftHandFrames.Add(leftHandTracker.GetHandFrameData());
+        // Get hand data for both hands
+        FrameHandData rightHandData = rightHandTracker.GetHandFrameData();
+        FrameHandData leftHandData = leftHandTracker.GetHandFrameData();
+
+        // Record hand data only if both are valid
+        if (rightHandData != null && leftHandData != null)
+        {
+            currentActionData.rightHandFrames.Add(rightHandData);
+            currentActionData.leftHandFrames.Add(leftHandData);
+        }
+        else
+        {
+            Debug.LogWarning("Hand data is incomplete. Skipping recording for this frame. Normal in first frames.");
+        }
     }
+
 
     public void ResetGameData(bool saveCurrentData = false)
     {

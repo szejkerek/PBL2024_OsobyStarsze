@@ -3,9 +3,10 @@ using UnityEngine;
 
 
 [System.Serializable]
-public struct FrameHandData
+public class FrameHandData
 {
     public Vector3 position;
+    public Quaternion rotation;
     public Vector3 rotationEuler;
     public Vector3 direction;
     public float speed;
