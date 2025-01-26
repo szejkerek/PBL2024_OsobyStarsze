@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 [System.Serializable]
@@ -43,7 +44,7 @@ public class ActionData
     public bool handReachedDestination;
     public bool rightHandReachedDestination;
     public bool leftHandReachedDestination;
-    public float aimAccuracy;
+    [FormerlySerializedAs("aimAccuracy")] public float handDistanceToTarget;
     public List<FrameHandData> rightHandFrames;
     public List<FrameHandData> leftHandFrames;
 
@@ -55,7 +56,7 @@ public class ActionData
         bool handReachedDestination = false, 
         bool rightHandReachedDestination = false, 
         bool leftHandReachedDestination = false, 
-        float aimAccuracy = 0f)
+        float handDistanceToTarget = 0f)
     {
         rightHandFrames = new List<FrameHandData>();
         leftHandFrames = new List<FrameHandData>();
@@ -65,6 +66,6 @@ public class ActionData
         this.handReachedDestination = handReachedDestination;
         this.rightHandReachedDestination = rightHandReachedDestination;
         this.leftHandReachedDestination = leftHandReachedDestination;
-        this.aimAccuracy = aimAccuracy;
+        this.handDistanceToTarget = handDistanceToTarget;
     }
 }

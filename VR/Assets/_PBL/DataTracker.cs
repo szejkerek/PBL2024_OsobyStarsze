@@ -63,7 +63,7 @@ public class DataTracker : MonoBehaviour
         currentActionData.handReachedDestination = true;
         currentActionData.rightHandReachedDestination = true;
         currentActionData.leftHandReachedDestination = false;
-        currentActionData.aimAccuracy = 0.70f;
+        currentActionData.handDistanceToTarget = 5.70f;
 
         // Add to game data
         currentGameData.AddAction(currentActionData);
