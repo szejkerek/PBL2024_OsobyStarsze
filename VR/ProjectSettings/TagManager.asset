@@ -10,6 +10,8 @@ TagManager:
   - Kitchen Utensils
   - Sports
   - Electronics
+  - MoleArea
+  - Door
   layers:
   - Default
   - TransparentFX
