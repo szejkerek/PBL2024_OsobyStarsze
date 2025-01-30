@@ -12,20 +12,20 @@ with open(file_name, "r") as file:
 game = Game(file_name, json_data)
 
 # Hand heatmaps
-# plot_hand_heatmap(game.actions, "right")
-# plot_hand_heatmap(game.actions, "left")
+plot_hand_heatmap(game.actions, "right")
+plot_hand_heatmap(game.actions, "left")
 
-# # Hand analysis
-# plot_speed_over_time(game.actions)
-# plot_hand_movement_3d(game.actions, "right")
-# plot_hand_movement_3d(game.actions, "left")
+# Hand analysis
+plot_speed_over_time(game.actions)
+plot_hand_movement_3d(game.actions, "right")
+plot_hand_movement_3d(game.actions, "left")
 
-# # Reaction and accuracy analysis
-# plot_reaction_time_distribution(game.actions)
-# plot_aim_accuracy(game.actions)
+# Reaction and accuracy analysis
+plot_reaction_time_distribution(game.actions)
+plot_aim_accuracy(game.actions)
 
-# # Performance comparison
-# compare_hand_performance(game.actions)
+# Performance comparison
+compare_hand_performance(game.actions)
 
 
 results = {
@@ -36,8 +36,12 @@ results = {
     "Hand Velocity (Avg)": hand_velocity_analysis(game),
     "Hand Acceleration (Avg)": hand_acceleration_analysis(game),
     "Reaction vs Accuracy Correlation": reaction_time_vs_accuracy_correlation(game),
-    "Reaction Time Clusters": kmeans_cluster_reaction_times(game)
+    "Reaction Time Clusters": kmeans_cluster_reaction_times(game),
+    "Successful Reaches (%)": successful_reaches_ratio(game),
+    "Hand Usage (%)": right_vs_left_hand_usage(game),
+    "Distance Traveled per Hand": average_distance_traveled_per_hand(game),
 }
+
 
 # Handle warnings
 warnings = []
