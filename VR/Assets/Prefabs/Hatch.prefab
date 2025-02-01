@@ -100,7 +100,7 @@ HingeJoint:
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
   m_MassScale: 1
-  m_ConnectedMassScale: 20
+  m_ConnectedMassScale: 50
 --- !u!1 &1944577889612506813
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,7 +439,7 @@ HingeJoint:
   m_EnableCollision: 0
   m_EnablePreprocessing: 1
   m_MassScale: 1
-  m_ConnectedMassScale: 20
+  m_ConnectedMassScale: 50
 --- !u!1 &2709455969132983744
 GameObject:
   m_ObjectHideFlags: 0
@@ -1081,7 +1081,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceTarget: {fileID: 8349160281029048864}
-  forceStrength: 2
+  forceStrength: 10
   forceType: 0
   rotationStabilizationForce: 5
   releaseImpulseStrength: 2
