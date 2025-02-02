@@ -48,9 +48,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   appType: 1
-  handDataRecordInterval: 0.01
+  handDataRecordInterval: 0.2
   rightHandTracker: {fileID: 873336754049266030}
   leftHandTracker: {fileID: 7435297653977569692}
+  currentActionData:
+    handMovementToObjectTime: 0
+    reactionTime: 0
+    handReachedDestinationTimestamp: 0
+    goodTargetFound: 0
+    handReachedDestination: 0
+    rightHandReachedDestination: 0
+    leftHandReachedDestination: 0
+    handDistanceToTarget: 0
+    rightHandFrames: []
+    leftHandFrames: []
+  currentTarget: {fileID: 0}
 --- !u!114 &7435297653977569692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,6 +76,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handPrefab: {fileID: 0}
+  handBehaviourHandler: {fileID: 0}
 --- !u!114 &873336754049266030
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,6 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handPrefab: {fileID: 0}
+  handBehaviourHandler: {fileID: 0}
 --- !u!114 &1047994126427585903
 MonoBehaviour:
   m_ObjectHideFlags: 0
