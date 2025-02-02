@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 
 public class MoleSpawner : MonoBehaviour
 {
@@ -61,8 +62,10 @@ public class MoleSpawner : MonoBehaviour
 
                 if (hatchAvailability[hatchIndex])
                 {
+                    DataTracker.Instance.SetActionStartTimestamp();
                     StartCoroutine(HandleHatch(hatchIndex));
                     yield return new WaitForSeconds(spawnInterval);
+                    DataTracker.Instance.EndAction();
                 }
             }
             else
@@ -76,7 +79,8 @@ public class MoleSpawner : MonoBehaviour
     {
         hatchAvailability[hatchIndex] = false;
         HatchController hatchController = hatchControllers[hatchIndex];
-
+        DataTracker.Instance.currentTarget = hatchController.transform;
+        
         hatchController.ReleaseAllDoors();
         yield return new WaitForSeconds(preSpawnDowntime);
 
@@ -112,6 +116,7 @@ public class MoleSpawner : MonoBehaviour
             rb.AddForce(upwardForce, spawnForceMode);
         }
 
+        
         Destroy(spawnedMole, lifetimeDowntime + eolDowntime);
     }
 }

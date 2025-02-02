@@ -41,6 +41,7 @@ public class ActionData
     public float handMovementToObjectTime;
     public float reactionTime;
     public float handReachedDestinationTimestamp;
+    public bool goodTargetFound;
     public bool handReachedDestination;
     public bool rightHandReachedDestination;
     public bool leftHandReachedDestination;
@@ -54,6 +55,7 @@ public class ActionData
         float reactionTime = 0f, 
         float handReachedDestinationTimestamp = 0f, 
         bool handReachedDestination = false, 
+        bool goodTargetFound = false, 
         bool rightHandReachedDestination = false, 
         bool leftHandReachedDestination = false, 
         float handDistanceToTarget = 0f)

@@ -38,6 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -545,7 +546,7 @@ MonoBehaviour:
   spawnDowntime: 0.5
   lifetimeDowntime: 3
   eolDowntime: 1
-  spawnInterval: 2
+  spawnInterval: 5.5
 --- !u!4 &20768316
 Transform:
   m_ObjectHideFlags: 0
@@ -3791,9 +3792,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481bc500da5c6e949a5ba7b1c1839f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isRight: 0
   targetTags: []
   destructionDelay: 3
   textOffset: {x: 0, y: 1, z: 0}
+  ShouldTrackHandToObjectTime: 1
+  TimestampToObjectTime: 0
 --- !u!65 &309501697
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5589,11 +5593,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481bc500da5c6e949a5ba7b1c1839f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isRight: 0
   targetTags:
   - Food
   - Kitchen Utensils
   destructionDelay: 1
   textOffset: {x: 0, y: 2, z: 0}
+  ShouldTrackHandToObjectTime: 1
+  TimestampToObjectTime: 0
 --- !u!135 &406108992
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -19998,6 +20005,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3999487018415155954, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4160625060913132816, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -20111,6 +20122,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 7062004111599359807, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7062004111599359807, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
       propertyPath: m_RayInteractors.Array.data[0].m_Interactor
       value: 
       objectReference: {fileID: 0}
@@ -20210,9 +20225,21 @@ PrefabInstance:
       propertyPath: m_TeleportInteractor
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8189171602916567489, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8189171602916567492, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8475227832468170691, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8575046591034035823, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8895792788544808161, guid: 65eb6b98091a5734ba9d9ca871cef69a, type: 3}
       propertyPath: m_StartingGroupMembers.Array.data[0]
@@ -20315,11 +20342,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 481bc500da5c6e949a5ba7b1c1839f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isRight: 1
   targetTags:
   - Food
   - Kitchen Utensils
   destructionDelay: 1
   textOffset: {x: 0, y: 2, z: 0}
+  ShouldTrackHandToObjectTime: 1
+  TimestampToObjectTime: 0
 --- !u!135 &1387572251
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -24593,12 +24623,12 @@ MonoBehaviour:
   m_RequiresColorTexture: 0
   m_Version: 2
   m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
+    quality: 3
+    frameInfluence: 0.1
+    jitterScale: 1
+    mipBias: 0
+    varianceClampScale: 0.9
+    contrastAdaptiveSharpening: 0
 --- !u!4 &1670150316 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1543462391947735107, guid: ab931d06f54192f45ae5f39db40c6e7b, type: 3}
@@ -30661,6 +30691,79 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5769129917905125718, guid: 3106a6f3c2fc2a547b55f8f47ff2e09c, type: 3}
   m_PrefabInstance: {fileID: 2142966434}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &165679251207913475
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 873336754049266030, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: handPrefab
+      value: 
+      objectReference: {fileID: 867532729}
+    - target: {fileID: 873336754049266030, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: handBehaviourHandler
+      value: 
+      objectReference: {fileID: 1387572250}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 978879961254585957, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7435297653977569692, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: handPrefab
+      value: 
+      objectReference: {fileID: 406108989}
+    - target: {fileID: 7435297653977569692, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: handBehaviourHandler
+      value: 
+      objectReference: {fileID: 406108991}
+    - target: {fileID: 7451055686599853223, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
+      propertyPath: m_Name
+      value: PBL_Tracker
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a1086458c8a4c3f408276fda99f3c632, type: 3}
 --- !u!1001 &8019241011220015053
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -30730,3 +30833,4 @@ SceneRoots:
   - {fileID: 1387572246}
   - {fileID: 89667955}
   - {fileID: 1144164461}
+  - {fileID: 165679251207913475}

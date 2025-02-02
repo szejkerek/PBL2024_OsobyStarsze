@@ -49,8 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appType: 1
   handDataRecordInterval: 0.01
-  rightHandTracker: {fileID: 7435297653977569692}
-  leftHandTracker: {fileID: 873336754049266030}
+  rightHandTracker: {fileID: 873336754049266030}
+  leftHandTracker: {fileID: 7435297653977569692}
 --- !u!114 &7435297653977569692
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -9,10 +9,14 @@ public class CountdownTimer : MonoBehaviour
     private GameObject textObject;
     private Vector3 textPositionOffset;
 
-    public void InitializeTimer(float duration, Vector3 offset)
+    private bool isRight;
+    
+    public void InitializeTimer(float duration, Vector3 offset, bool isRight )
     {
         textPositionOffset = offset;
         remainingTime = duration;
+        this.isRight = isRight;
+        
         CreateTextMesh();
         if (!IsCountingDown)
         {
@@ -71,9 +75,29 @@ public class CountdownTimer : MonoBehaviour
             if (gameObject.CompareTag(GameManager.instance.selectedTag))
             {
                 GameManager.instance.IncreaseScore();
+                DataTracker.Instance.currentActionData.handReachedDestination = true;
+                DataTracker.Instance.currentActionData.goodTargetFound = true;
+                if (isRight)
+                {
+                    DataTracker.Instance.currentActionData.rightHandReachedDestination = true;
+                }
+                else
+                {
+                    DataTracker.Instance.currentActionData.leftHandReachedDestination = true;
+                }
             }
             else
             {
+                DataTracker.Instance.currentActionData.handReachedDestination = true;
+                DataTracker.Instance.currentActionData.goodTargetFound = false;
+                if (isRight)
+                {
+                    DataTracker.Instance.currentActionData.rightHandReachedDestination = true;
+                }
+                else
+                {
+                    DataTracker.Instance.currentActionData.leftHandReachedDestination = true;
+                }
                 GameManager.instance.DecreaseHealth();
             }
         }

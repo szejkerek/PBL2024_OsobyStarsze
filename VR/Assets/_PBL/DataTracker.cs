@@ -22,9 +22,22 @@ public class DataTracker : MonoBehaviour
 
     private string filePath;
     private GameAnalysisData currentGameData;
-    private ActionData currentActionData;
-
+    public ActionData currentActionData;
+    private float currentActionStartTime = 0.0f;
+    public Transform currentTarget;
+    
+    
     private float nextRecordTime;
+
+    public void SetActionStartTimestamp()
+    {
+        currentActionStartTime = Time.time;
+        rightHandTracker.handBehaviourHandler.ShouldTrackHandToObjectTime = true;
+        leftHandTracker.handBehaviourHandler.ShouldTrackHandToObjectTime = true;
+        rightHandTracker.handBehaviourHandler.TimestampToObjectTime = 0.0f;
+        leftHandTracker.handBehaviourHandler.TimestampToObjectTime = 0.0f;
+        currentTarget = null;
+    }
 
     private void Awake()
     {
@@ -57,13 +70,12 @@ public class DataTracker : MonoBehaviour
         }
 
         // Populate action data
-        currentActionData.handMovementToObjectTime = 2.5f;
-        currentActionData.reactionTime = 1.25f;
+        CalculateHandToObjectTime();
+        Debug.Log("Hand to object time " + currentActionData.handMovementToObjectTime + " seconds");
+        currentActionData.reactionTime = UnityEngine.Random.Range(0.2f, 0.8f);
         currentActionData.handReachedDestinationTimestamp = currentActionData.handMovementToObjectTime + currentActionData.reactionTime;
-        currentActionData.handReachedDestination = true;
-        currentActionData.rightHandReachedDestination = true;
-        currentActionData.leftHandReachedDestination = false;
-        currentActionData.handDistanceToTarget = 5.70f;
+        CalculateDistance();
+        Debug.Log("Hand to object distance " + currentActionData.handDistanceToTarget + " meters");
 
         // Add to game data
         currentGameData.AddAction(currentActionData);
@@ -75,6 +87,56 @@ public class DataTracker : MonoBehaviour
             leftHandFrames = new List<FrameHandData>()
         };
     }
+
+    private void CalculateDistance()
+    {
+        if (currentTarget == null)
+        {
+            currentActionData.handDistanceToTarget = 0.0f;
+            return;
+        }
+
+        float leftHandDistance = Vector3.Distance(leftHandTracker.handBehaviourHandler.transform.position, currentTarget.position);
+        float rihtDistance = Vector3.Distance(rightHandTracker.handBehaviourHandler.transform.position, currentTarget.position);
+        
+        float distance = Mathf.Min(leftHandDistance, rihtDistance);
+
+        if (currentActionData.handReachedDestination)
+        {
+            currentActionData.handDistanceToTarget = 0.0f;
+            return;
+        }
+        
+        
+        currentActionData.handDistanceToTarget = distance;
+    }
+
+    private void CalculateHandToObjectTime()
+    {
+        float leftHandTime = leftHandTracker.handBehaviourHandler.TimestampToObjectTime - currentActionStartTime;
+        float rightHandTime = rightHandTracker.handBehaviourHandler.TimestampToObjectTime - currentActionStartTime;
+
+        if (leftHandTime <= 0.0f && rightHandTime <= 0.0f)
+        {
+            currentActionData.handMovementToObjectTime = -1f;
+            return;
+        }
+
+        if (leftHandTime > 0.0f && rightHandTime <= 0.0f)
+        {
+            currentActionData.handMovementToObjectTime = leftHandTime;
+            return;
+        }
+
+        if (rightHandTime > 0.0f && leftHandTime <= 0.0f)
+        {
+            currentActionData.handMovementToObjectTime = rightHandTime;
+            return;
+        }
+
+        currentActionData.handMovementToObjectTime = Mathf.Min(leftHandTime, rightHandTime);
+    }
+
 
     private void InitializeFilePath()
     {
