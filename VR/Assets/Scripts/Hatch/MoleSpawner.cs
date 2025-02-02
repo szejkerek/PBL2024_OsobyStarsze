@@ -6,7 +6,7 @@ using System.Linq;
 public class MoleSpawner : MonoBehaviour
 {
     [Header("Mole Configuration")]
-    [SerializeField] private List<GameObject> molePrefabs;
+    [SerializeField] private List<GameObject> molePrefabs = new List<GameObject>();
     [SerializeField] private float spawnForce = 500f;
     [SerializeField] private ForceMode spawnForceMode = ForceMode.Impulse;
     [SerializeField] private Vector3 scaleMultiplier = Vector3.one; // Scale multiplier
@@ -44,13 +44,17 @@ public class MoleSpawner : MonoBehaviour
         StartCoroutine(SpawnMolesRoutine());
     }
 
+    public void UpdateSpawnablePrefabs(List<GameObject> newPrefabs)
+    {
+        molePrefabs = new List<GameObject>(newPrefabs);
+    }
+
     private IEnumerator SpawnMolesRoutine()
     {
         while (true)
         {
             if (availableHatches.Count > 0)
             {
-                // Randomly select an available hatch
                 int randomIndex = Random.Range(0, availableHatches.Count);
                 int hatchIndex = availableHatches[randomIndex];
                 availableHatches.RemoveAt(randomIndex);
@@ -73,24 +77,19 @@ public class MoleSpawner : MonoBehaviour
         hatchAvailability[hatchIndex] = false;
         HatchController hatchController = hatchControllers[hatchIndex];
 
-        // Open Hatch
         hatchController.ReleaseAllDoors();
         yield return new WaitForSeconds(preSpawnDowntime);
 
-        // Spawn Mole
         SpawnMole(hatchController.spawnPoint.transform);
         yield return new WaitForSeconds(spawnDowntime);
 
-        // Close Hatch
-        hatchController.StartApplyingForces(); // Start physics forces
+        hatchController.StartApplyingForces();
         yield return new WaitForSeconds(lifetimeDowntime);
 
-        // Stop forces and reopen
         hatchController.StopApplyingForces();
         hatchController.ReleaseAllDoors();
         yield return new WaitForSeconds(eolDowntime);
 
-        // Reset availability
         hatchAvailability[hatchIndex] = true;
         availableHatches.Add(hatchIndex);
     }
@@ -102,7 +101,6 @@ public class MoleSpawner : MonoBehaviour
         GameObject molePrefab = molePrefabs[Random.Range(0, molePrefabs.Count)];
         GameObject spawnedMole = Instantiate(molePrefab, spawnPoint.position, Quaternion.identity);
 
-        // Multiply prefab's original scale by our multiplier
         spawnedMole.transform.localScale = Vector3.Scale(
             molePrefab.transform.localScale,
             scaleMultiplier

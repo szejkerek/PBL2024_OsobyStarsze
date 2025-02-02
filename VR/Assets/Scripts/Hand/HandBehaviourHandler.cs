@@ -27,7 +27,7 @@ public class HandBehaviourHandler : MonoBehaviour
             CountdownTimer timer = other.GetComponent<CountdownTimer>();
             if (timer != null && timer.IsCountingDown)
             {
-                Destroy(timer);
+                timer.StopTimer();
             }
         }
     }

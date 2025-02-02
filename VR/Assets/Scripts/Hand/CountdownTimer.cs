@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
+
 public class CountdownTimer : MonoBehaviour
 {
     public bool IsCountingDown { get; private set; }
@@ -13,9 +13,7 @@ public class CountdownTimer : MonoBehaviour
     {
         textPositionOffset = offset;
         remainingTime = duration;
-
         CreateTextMesh();
-
         if (!IsCountingDown)
         {
             StartCoroutine(Countdown());
@@ -28,8 +26,6 @@ public class CountdownTimer : MonoBehaviour
         {
             textObject = new GameObject("TimerDisplay");
             textMesh = textObject.AddComponent<TextMesh>();
-
-            // Text configuration
             textMesh.anchor = TextAnchor.UpperCenter;
             textMesh.alignment = TextAlignment.Center;
             textMesh.fontSize = 20;
@@ -40,31 +36,22 @@ public class CountdownTimer : MonoBehaviour
     private IEnumerator Countdown()
     {
         IsCountingDown = true;
-
         while (remainingTime > 0)
         {
-            // Update text position and rotation every frame
             UpdateTextPosition();
             UpdateTimerDisplay();
             remainingTime -= Time.deltaTime;
             yield return null;
         }
-
-        Destroy(gameObject);
+        HandleTimerCompletion();
     }
 
     private void UpdateTextPosition()
     {
         if (textObject != null)
         {
-            // Position text above object in world space
             textObject.transform.position = transform.position + textPositionOffset;
-
-            // Align text with global up vector (always face camera)
-            textObject.transform.rotation = Quaternion.LookRotation(
-                Camera.main.transform.forward,
-                Vector3.up
-            );
+            textObject.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up);
         }
     }
 
@@ -73,6 +60,34 @@ public class CountdownTimer : MonoBehaviour
         if (textMesh != null)
         {
             textMesh.text = Mathf.FloorToInt(remainingTime).ToString();
+        }
+    }
+
+    private void HandleTimerCompletion()
+    {
+        gameObject.SetActive(false);
+        if (GameManager.instance != null)
+        {
+            if (gameObject.CompareTag(GameManager.instance.selectedTag))
+            {
+                GameManager.instance.IncreaseScore();
+            }
+            else
+            {
+                GameManager.instance.DecreaseHealth();
+            }
+        }
+        Destroy(textObject);
+        Destroy(this);
+    }
+
+    public void StopTimer()
+    {
+        StopAllCoroutines();
+        IsCountingDown = false;
+        if (textObject != null)
+        {
+            Destroy(textObject);
         }
     }
 
