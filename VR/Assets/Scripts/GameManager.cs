@@ -21,18 +21,11 @@ public class GameManager : MonoBehaviour
     {
         if (instance == null)
             instance = this;
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
 
-        DontDestroyOnLoad(gameObject); // Keep GameManager persistent
-
-        selectedTag = categories.Length > 0 ? categories[Random.Range(0, categories.Length)] : "";
+        selectedTag = categories[Random.Range(0, categories.Length)];
 
         points = 0;
-        health = 3; // Initialize health correctly
+        health = 3; // Initialize health
         UpdateUI();
     }
 
@@ -50,11 +43,8 @@ public class GameManager : MonoBehaviour
 
     public void DecreaseHealth()
     {
-        if (health > 0) // Prevents negative health values
-        {
-            health--;
-            UpdateUI();
-        }
+        health--;
+        UpdateUI();
 
         if (health <= 0)
         {
@@ -71,6 +61,6 @@ public class GameManager : MonoBehaviour
     public void setPoints(int p)
     {
         points = p;
-        UpdateUI(); // Ensure UI is updated
+        if (scoreText != null) scoreText.text = "Poprawne: " + points.ToString();
     }
 }
