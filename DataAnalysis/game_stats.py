@@ -16,36 +16,33 @@ def game_duration(game):
     """
     return game.end_timestamp - game.start_timestamp
 
-def average_reaction_time(game):
+def average_reach_time(game):
     """
-    Computes the average reaction time for all actions in the game.
-    Helps measure player responsiveness.
+    Computes the average time taken to reach the destination.
     """
-    times = [action.reaction_time for action in game.actions]
+    times = [action.hand_reached_destination_timestamp for action in game.actions]
     return sum(times) / len(times) if times else 0.0
 
-def reaction_time_variance(game):
+def reach_time_variance(game):
     """
-    Computes the variance of reaction times.
-    Higher variance indicates inconsistent reaction performance.
+    Computes the variance of reach times.
     """
-    times = [action.reaction_time for action in game.actions]
+    times = [action.hand_reached_destination_timestamp for action in game.actions]
     return np.var(times) if times else 0.0
 
-def reaction_time_standard_deviation(game):
+
+def reach_time_standard_deviation(game):
     """
-    Measures how much reaction times deviate from the mean.
-    A lower value indicates more consistent reaction performance.
+    Measures how much reach times deviate from the mean.
     """
-    times = [action.reaction_time for action in game.actions]
+    times = [action.hand_reached_destination_timestamp for action in game.actions]
     return np.std(times) if times else 0.0
 
-def reaction_time_percentiles(game):
+def reach_time_percentiles(game):
     """
-    Computes 25th, 50th (median), and 75th percentiles of reaction time.
-    Useful for understanding reaction speed distribution.
+    Computes 25th, 50th (median), and 75th percentiles of reach time.
     """
-    times = np.array([action.reaction_time for action in game.actions])
+    times = np.array([action.hand_reached_destination_timestamp for action in game.actions])
     if times.size == 0:
         return {"25th": 0.0, "50th": 0.0, "75th": 0.0}
     return {"25th": np.percentile(times, 25), "50th": np.median(times), "75th": np.percentile(times, 75)}
@@ -91,28 +88,28 @@ def moving_average_hand_speed(game, window_size=5):
         return speeds
     return np.convolve(speeds, np.ones(window_size) / window_size, mode='valid')
 
-def reaction_time_vs_accuracy_correlation(game):
+
+def reach_time_vs_accuracy_correlation(game):
     """
-    Computes correlation between reaction time and aim accuracy.
-    Helps determine if faster reactions lead to better aiming.
+    Computes correlation between reach time and aim accuracy.
     """
-    reaction_times = [action.reaction_time for action in game.actions]
+    reach_times = [action.hand_reached_destination_timestamp for action in game.actions]
     accuracies = [action.aim_accuracy for action in game.actions]
-    if len(reaction_times) < 2 or len(accuracies) < 2:
+    if len(reach_times) < 2 or len(accuracies) < 2:
         return 0.0
-    correlation, _ = pearsonr(reaction_times, accuracies)
+    correlation, _ = pearsonr(reach_times, accuracies)
     return correlation
 
-def kmeans_cluster_reaction_times(game, clusters=3):
+def kmeans_cluster_reach_times(game, clusters=3):
     """
-    Uses K-Means clustering to categorize reaction times into groups.
+    Uses K-Means clustering to categorize reach times into groups.
     Helps identify player skill levels.
     """
-    reaction_times = np.array([action.reaction_time for action in game.actions]).reshape(-1, 1)
-    if reaction_times.size < clusters:
+    reach_times = np.array([action.hand_reached_destination_timestamp for action in game.actions]).reshape(-1, 1)
+    if reach_times.size < clusters:
         return []
-    kmeans = KMeans(n_clusters=clusters, random_state=0, n_init=10).fit(reaction_times)
-    return list(zip(reaction_times.flatten(), kmeans.labels_))
+    kmeans = KMeans(n_clusters=clusters, random_state=0, n_init=10).fit(reach_times)
+    return list(zip(reach_times.flatten(), kmeans.labels_))
 
 def successful_reaches_ratio(game):
     """
@@ -152,3 +149,14 @@ def average_distance_traveled_per_hand(game):
                 )
 
     return {"left_hand": left_hand_distance, "right_hand": right_hand_distance}
+
+
+
+
+
+
+
+
+
+
+

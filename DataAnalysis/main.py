@@ -30,13 +30,13 @@ compare_hand_performance(game.actions)
 
 results = {
     "Game Duration": game_duration(game),
-    "Average Reaction Time": average_reaction_time(game),
-    "Reaction Time Std Dev": reaction_time_standard_deviation(game),
-    "Reaction Time Percentiles": reaction_time_percentiles(game),
+    "Average Reaction Time": average_reach_time(game),
+    "Reaction Time Std Dev": reach_time_standard_deviation(game),
+    "Reaction Time Percentiles": reach_time_percentiles(game),
     "Hand Velocity (Avg)": hand_velocity_analysis(game),
     "Hand Acceleration (Avg)": hand_acceleration_analysis(game),
-    "Reaction vs Accuracy Correlation": reaction_time_vs_accuracy_correlation(game),
-    "Reaction Time Clusters": kmeans_cluster_reaction_times(game),
+    "Reaction vs Accuracy Correlation": reach_time_vs_accuracy_correlation(game),
+    "Reaction Time Clusters": kmeans_cluster_reach_times(game),
     "Successful Reaches (%)": successful_reaches_ratio(game),
     "Hand Usage (%)": right_vs_left_hand_usage(game),
     "Distance Traveled per Hand": average_distance_traveled_per_hand(game),
