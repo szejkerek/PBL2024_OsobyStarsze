@@ -1081,10 +1081,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceTarget: {fileID: 8349160281029048864}
-  forceStrength: 10
+  forceStrength: 40
   forceType: 0
-  rotationStabilizationForce: 5
-  releaseImpulseStrength: 2
+  rotationStabilizationForce: 20
+  releaseImpulseStrength: 0
   hatchDoors:
   - {fileID: 2286883774191916738}
   - {fileID: 8561458124935388348}

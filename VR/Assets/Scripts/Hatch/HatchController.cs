@@ -9,21 +9,44 @@ public class HatchController : MonoBehaviour
     [SerializeField] private float forceStrength = 100f;
     [SerializeField] private ForceMode forceType = ForceMode.Force;
     [SerializeField] private float rotationStabilizationForce = 50f;
-    [SerializeField] private float releaseImpulseStrength = 50f; // New impulse strength variable
+    [SerializeField] private float releaseImpulseStrength = 50f;
 
     [Header("Door References")]
     [SerializeField] public List<Rigidbody> hatchDoors = new List<Rigidbody>();
-
-    [Header("Other References")]
     [SerializeField] public GameObject spawnPoint;
 
     private List<Quaternion> _initialRotations = new List<Quaternion>();
+    private bool _shouldApplyForces; // New control flag
 
     private void Start()
     {
         StoreInitialRotations();
         ValidateForceTarget();
     }
+
+    private void FixedUpdate() // Physics updates belong here
+    {
+        if (!_shouldApplyForces) return;
+
+        foreach (int i in Enumerable.Range(0, hatchDoors.Count))
+        {
+            Rigidbody door = hatchDoors[i];
+            if (door == null) continue;
+
+            // Position force
+            Vector3 positionForce = CalculatePositionForce(door.position);
+            door.AddForce(positionForce, forceType);
+
+            // Rotation stabilization
+            Quaternion rotationForce = CalculateRotationForce(door.rotation, _initialRotations[i]);
+            door.AddTorque(new Vector3(rotationForce.x, rotationForce.y, rotationForce.z) * rotationStabilizationForce);
+        }
+    }
+
+    // Add these control methods
+    public void StartApplyingForces() => _shouldApplyForces = true;
+    public void StopApplyingForces() => _shouldApplyForces = false;
+
 
     private void StoreInitialRotations()
     {
@@ -41,23 +64,6 @@ public class HatchController : MonoBehaviour
             Debug.LogError("Force target not assigned!", gameObject);
             forceTarget = new GameObject("ForceTarget_Fallback").transform;
             forceTarget.position = Vector3.zero;
-        }
-    }
-
-    public void ApplyDoorForces()
-    {
-        foreach (int i in Enumerable.Range(0, hatchDoors.Count))
-        {
-            Rigidbody door = hatchDoors[i];
-            if (door == null) continue;
-
-            // Calculate position force
-            Vector3 positionForce = CalculatePositionForce(door.position);
-            door.AddForce(positionForce, forceType);
-
-            // Apply rotation stabilization
-            Quaternion rotationForce = CalculateRotationForce(door.rotation, _initialRotations[i]);
-            door.AddTorque(new Vector3(rotationForce.x, rotationForce.y, rotationForce.z) * rotationStabilizationForce);
         }
     }
 

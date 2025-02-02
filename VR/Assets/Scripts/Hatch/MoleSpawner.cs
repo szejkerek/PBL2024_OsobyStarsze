@@ -9,6 +9,7 @@ public class MoleSpawner : MonoBehaviour
     [SerializeField] private List<GameObject> molePrefabs;
     [SerializeField] private float spawnForce = 500f;
     [SerializeField] private ForceMode spawnForceMode = ForceMode.Impulse;
+    [SerializeField] private Vector3 scaleMultiplier = Vector3.one; // Scale multiplier
 
     [Header("Hatch Configuration")]
     [SerializeField] private List<HatchController> hatchControllers;
@@ -70,7 +71,6 @@ public class MoleSpawner : MonoBehaviour
     private IEnumerator HandleHatch(int hatchIndex)
     {
         hatchAvailability[hatchIndex] = false;
-
         HatchController hatchController = hatchControllers[hatchIndex];
 
         // Open Hatch
@@ -81,29 +81,18 @@ public class MoleSpawner : MonoBehaviour
         SpawnMole(hatchController.spawnPoint.transform);
         yield return new WaitForSeconds(spawnDowntime);
 
-        // Close Hatch and store the coroutine reference
-        Coroutine keepClosedCoroutine = StartCoroutine(KeepHatchClosed(hatchController));
+        // Close Hatch
+        hatchController.StartApplyingForces(); // Start physics forces
         yield return new WaitForSeconds(lifetimeDowntime);
 
-        // Stop the specific KeepHatchClosed coroutine
-        StopCoroutine(keepClosedCoroutine);
-
-        // Reopen Hatch
+        // Stop forces and reopen
+        hatchController.StopApplyingForces();
         hatchController.ReleaseAllDoors();
         yield return new WaitForSeconds(eolDowntime);
 
-        // Make Hatch Available
+        // Reset availability
         hatchAvailability[hatchIndex] = true;
-        availableHatches.Add(hatchIndex); // Add back to available hatches
-    }
-
-    private IEnumerator KeepHatchClosed(HatchController hatchController)
-    {
-        while (true)
-        {
-            hatchController.ApplyDoorForces();
-            yield return null;
-        }
+        availableHatches.Add(hatchIndex);
     }
 
     private void SpawnMole(Transform spawnPoint)
@@ -112,6 +101,12 @@ public class MoleSpawner : MonoBehaviour
 
         GameObject molePrefab = molePrefabs[Random.Range(0, molePrefabs.Count)];
         GameObject spawnedMole = Instantiate(molePrefab, spawnPoint.position, Quaternion.identity);
+
+        // Multiply prefab's original scale by our multiplier
+        spawnedMole.transform.localScale = Vector3.Scale(
+            molePrefab.transform.localScale,
+            scaleMultiplier
+        );
 
         if (spawnedMole.TryGetComponent(out Rigidbody rb))
         {
