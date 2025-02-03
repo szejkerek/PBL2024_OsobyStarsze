@@ -89,17 +89,6 @@ def moving_average_hand_speed(game, window_size=5):
     return np.convolve(speeds, np.ones(window_size) / window_size, mode='valid')
 
 
-def reach_time_vs_accuracy_correlation(game):
-    """
-    Computes correlation between reach time and aim accuracy.
-    """
-    reach_times = [action.hand_reached_destination_timestamp for action in game.actions]
-    accuracies = [action.aim_accuracy for action in game.actions]
-    if len(reach_times) < 2 or len(accuracies) < 2:
-        return 0.0
-    correlation, _ = pearsonr(reach_times, accuracies)
-    return correlation
-
 def kmeans_cluster_reach_times(game, clusters=3):
     """
     Uses K-Means clustering to categorize reach times into groups.

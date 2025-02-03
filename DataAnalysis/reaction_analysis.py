@@ -16,10 +16,10 @@ def plot_reaction_time_distribution(actions):
     plt.show()
 
 def plot_aim_accuracy(actions):
-    aim_accuracies = [action.aim_accuracy for action in actions]
+    aim_accuracies = [action.hand_distance_to_target for action in actions]
     plt.figure(figsize=(8, 5))
     plt.scatter(range(len(aim_accuracies)), aim_accuracies, alpha=0.6, color="green")
     plt.xlabel("Action Index")
-    plt.ylabel("Aim Accuracy")
-    plt.title("Aim Accuracy Over Time")
+    plt.ylabel("hand_distance_to_target")
+    plt.title("hand_distance_to_target Over Time")
     plt.show()

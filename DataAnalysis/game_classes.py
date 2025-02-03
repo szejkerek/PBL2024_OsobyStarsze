@@ -6,17 +6,20 @@ class Frame:
         self.direction = data.get("direction", {"x": 0.0, "y": 0.0, "z": 0.0})
         self.speed = data.get("speed", 0.0)
 
+
 class Action:
     def __init__(self, data):
         self.hand_movement_to_object_time = data.get("handMovementToObjectTime", 0.0)
         self.reaction_time = data.get("reactionTime", 0.0)
         self.hand_reached_destination_timestamp = data.get("handReachedDestinationTimestamp", 0.0)
+        self.good_target_found = data.get("goodTargetFound", False)
         self.hand_reached_destination = data.get("handReachedDestination", False)
         self.right_hand_reached_destination = data.get("rightHandReachedDestination", False)
         self.left_hand_reached_destination = data.get("leftHandReachedDestination", False)
-        self.aim_accuracy = data.get("aimAccuracy", 0.0)
-        self.left_hand_frames = [Frame(frame) for frame in data.get("leftHandFrames", [])]
+        self.hand_distance_to_target = data.get("handDistanceToTarget", data.get("aimAccuracy", 0.0))
         self.right_hand_frames = [Frame(frame) for frame in data.get("rightHandFrames", [])]
+        self.left_hand_frames = [Frame(frame) for frame in data.get("leftHandFrames", [])]
+
 
 class Game:
     def __init__(self, file_name, data):
@@ -27,3 +30,6 @@ class Game:
         self.start_timestamp = data.get("startTimestamp", 0.0)
         self.end_timestamp = data.get("endTimestamp", 0.0)
         self.actions = [Action(action) for action in data.get("actions", [])]
+
+    def add_action(self, action_data: Action):
+        self.actions.append(action_data)
