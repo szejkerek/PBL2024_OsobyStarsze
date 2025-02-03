@@ -6,7 +6,7 @@ from performance_comparison import compare_hand_performance
 from game_stats import *
 from newStats import *
 
-file_name = "data.json"
+file_name = "data2.json"
 with open(file_name, "r") as file:
     json_data = json.load(file)
 
