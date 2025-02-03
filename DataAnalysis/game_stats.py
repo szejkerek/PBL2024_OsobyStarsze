@@ -138,14 +138,3 @@ def average_distance_traveled_per_hand(game):
                 )
 
     return {"left_hand": left_hand_distance, "right_hand": right_hand_distance}
-
-
-
-
-
-
-
-
-
-
-
