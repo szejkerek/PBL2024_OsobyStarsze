@@ -5,35 +5,20 @@ public class CountdownTimer : MonoBehaviour
 {
     public bool IsCountingDown { get; private set; }
     private float remainingTime;
-    private TextMesh textMesh;
-    private GameObject textObject;
-    private Vector3 textPositionOffset;
-
+    private float initialDuration;
+    private HandBehaviourHandler handHandler;
     private bool isRight;
-    
-    public void InitializeTimer(float duration, Vector3 offset, bool isRight )
+
+    public void InitializeTimer(float duration, bool isRight, HandBehaviourHandler handHandler)
     {
-        textPositionOffset = offset;
-        remainingTime = duration;
+        this.handHandler = handHandler;
         this.isRight = isRight;
-        
-        CreateTextMesh();
+        initialDuration = duration;
+        remainingTime = duration;
+
         if (!IsCountingDown)
         {
             StartCoroutine(Countdown());
-        }
-    }
-
-    private void CreateTextMesh()
-    {
-        if (textObject == null)
-        {
-            textObject = new GameObject("TimerDisplay");
-            textMesh = textObject.AddComponent<TextMesh>();
-            textMesh.anchor = TextAnchor.UpperCenter;
-            textMesh.alignment = TextAlignment.Center;
-            textMesh.fontSize = 20;
-            textMesh.color = Color.red;
         }
     }
 
@@ -42,33 +27,19 @@ public class CountdownTimer : MonoBehaviour
         IsCountingDown = true;
         while (remainingTime > 0)
         {
-            UpdateTextPosition();
-            UpdateTimerDisplay();
+            float progress = 1 - (remainingTime / initialDuration);
+            handHandler?.UpdateProgress(progress);
             remainingTime -= Time.deltaTime;
             yield return null;
         }
         HandleTimerCompletion();
     }
 
-    private void UpdateTextPosition()
-    {
-        if (textObject != null)
-        {
-            textObject.transform.position = transform.position + textPositionOffset;
-            textObject.transform.rotation = Quaternion.LookRotation(Camera.main.transform.forward, Vector3.up);
-        }
-    }
-
-    private void UpdateTimerDisplay()
-    {
-        if (textMesh != null)
-        {
-            textMesh.text = Mathf.FloorToInt(remainingTime).ToString();
-        }
-    }
-
     private void HandleTimerCompletion()
     {
+        handHandler?.UpdateProgress(1f);
+        handHandler?.ResetProgress();
+
         gameObject.SetActive(false);
         if (GameManager.instance != null)
         {
@@ -101,7 +72,6 @@ public class CountdownTimer : MonoBehaviour
                 GameManager.instance.DecreaseHealth();
             }
         }
-        Destroy(textObject);
         Destroy(this);
     }
 
@@ -109,18 +79,12 @@ public class CountdownTimer : MonoBehaviour
     {
         StopAllCoroutines();
         IsCountingDown = false;
-        if (textObject != null)
-        {
-            Destroy(textObject);
-        }
+        handHandler?.ResetProgress();
     }
 
     private void OnDestroy()
     {
         IsCountingDown = false;
-        if (textObject != null)
-        {
-            Destroy(textObject);
-        }
+        handHandler?.ResetProgress();
     }
 }
