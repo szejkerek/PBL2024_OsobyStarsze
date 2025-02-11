@@ -52,6 +52,68 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+def is_ambidextrous(game, speed_threshold=0.1, usage_threshold=0.1, position_threshold=0.1):
+    """
+    Determines if the user is ambidextrous based on hand speed, usage frequency, and hand position in 3D space.
+
+    Parameters:
+    - game: An instance of the Game class containing actions.
+    - speed_threshold: Threshold for the difference in hand speeds (default: 0.1).
+    - usage_threshold: Threshold for the difference in hand usage frequency (default: 0.1).
+    - position_threshold: Threshold for the difference in hand positions in 3D space (default: 0.1).
+
+    Returns:
+    - True if the user is ambidextrous, False otherwise.
+    """
+    
+    # Extract hand speed data
+    right_speeds = []
+    left_speeds = []
+    
+    for action in game.actions:
+        for frame in action.right_hand_frames:
+            right_speeds.append(frame.speed)
+        for frame in action.left_hand_frames:
+            left_speeds.append(frame.speed)
+    
+    # Calculate mean speed for each hand
+    mean_right_speed = np.mean(right_speeds) if right_speeds else 0
+    mean_left_speed = np.mean(left_speeds) if left_speeds else 0
+    
+    # Calculate speed difference
+    speed_difference = abs(mean_right_speed - mean_left_speed) / max(mean_right_speed, mean_left_speed) if max(mean_right_speed, mean_left_speed) != 0 else 0
+    
+    # Calculate hand usage frequency
+    right_usage = len(right_speeds)
+    left_usage = len(left_speeds)
+    total_usage = right_usage + left_usage
+    usage_difference = abs(right_usage - left_usage) / total_usage if total_usage != 0 else 0
+    
+    # Calculate hand position differences in 3D space
+    right_positions = []
+    left_positions = []
+    
+    for action in game.actions:
+        for frame in action.right_hand_frames:
+            right_positions.append([frame.position["x"], frame.position["y"], frame.position["z"]])
+        for frame in action.left_hand_frames:
+            left_positions.append([frame.position["x"], frame.position["y"], frame.position["z"]])
+    
+    mean_right_position = np.mean(right_positions, axis=0) if right_positions else [0, 0, 0]
+    mean_left_position = np.mean(left_positions, axis=0) if left_positions else [0, 0, 0]
+    
+    position_difference = np.linalg.norm(np.array(mean_right_position) - np.array(mean_left_position)) / np.linalg.norm(np.array(mean_right_position)) if np.linalg.norm(np.array(mean_right_position)) != 0 else 0
+    
+    # Determine if the user is ambidextrous based on thresholds
+    if (speed_difference < speed_threshold and 
+        usage_difference < usage_threshold and 
+        position_difference < position_threshold):
+        print("True")
+        return True
+    else:
+        print("False")
+        return False
+
 def visualize_hand_speeds(game, rolling_window=5):
     """
     Extracts hand speed data, visualizes speed over action index and frame index,
@@ -376,7 +438,42 @@ def plot_hand_stats(game_data):
     plt.tight_layout()
     plt.show()
 
+def detect_fatigue(hand_distances, window_size=10, threshold=0.2, min_stable_windows=3):
+    """
+    Wykrywa momenty zmęczenia na podstawie ruchu ręki.
+    :param hand_distances: Lista odległości ręki do celu.
+    :param window_size: Rozmiar okna do obliczania średniej i wariancji.
+    :param threshold: Próg zmienności. Jeśli `None`, wyliczamy jako 10 percentyl wariancji.
+    :param min_stable_windows: Liczba kolejnych "stabilnych" okien potrzebnych do oznaczenia zmęczenia.
+    :return: Lista indeksów, gdzie zaczyna się zmęczenie.
+    """
+    if len(hand_distances) < window_size:
+        return []
+    
+    rolling_stds = []
+    fatigue_indices = []
 
+    for i in range(len(hand_distances) - window_size + 1):
+        window = hand_distances[i:i + window_size]
+        rolling_stds.append(np.std(window))
+
+    rolling_stds = np.array(rolling_stds)
+    
+    if threshold is None:
+        threshold = np.percentile(rolling_stds, 10)  # Dynamiczny próg (10% najniższych wartości)
+
+    stable_count = 0
+    for i in range(1, len(rolling_stds)):
+        if rolling_stds[i] < threshold:
+            stable_count += 1
+        else:
+            stable_count = 0
+
+        if stable_count >= min_stable_windows:
+            fatigue_indices.append(i + window_size - 1)
+
+    #print("Wykryte momenty zmęczenia:", fatigue_indices)  # Debugowanie
+    return fatigue_indices
 
 def analyze_and_plot_hand_distance(game):
     # Extract hand distances from all actions
@@ -414,8 +511,10 @@ def analyze_and_plot_hand_distance(game):
     stats_df = pd.DataFrame(stats, index=["Value"])
     print(stats_df)
     
+    fatigue_indices = detect_fatigue(hand_distances)
+    
     # Plot multiple visualizations in a single figure
-    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    fig, axes = plt.subplots(2, 3, figsize=(12, 10))
     
     # Histogram
     axes[0, 0].hist(hand_distances, bins=20, alpha=0.7, edgecolor='black', label="Hand Distances")
@@ -447,6 +546,20 @@ def analyze_and_plot_hand_distance(game):
     axes[1, 1].set_title("Violin Plot of Hand Distances")
     axes[1, 1].set_ylabel("Hand Distance to Target")
     axes[1, 1].set_xlabel("Hand Distance Distribution")
+    
+    # Line Chart (z oznaczeniem zmęczenia)
+    axes[0, 2].plot(hand_distances, marker='o', linestyle='-', label="Hand Distance")
+    axes[0, 2].axhline(mean_value, color='r', linestyle='dashed', linewidth=2, label=f'Mean: {mean_value:.2f}')
+    
+    # Oznaczenie momentów zmęczenia na wykresie
+    for idx in fatigue_indices:
+        axes[0, 2].axvline(idx, color='purple', linestyle='dotted', linewidth=1, label="Fatigue Detected" if idx == fatigue_indices[0] else "")
+
+    axes[0, 2].set_xlabel("Action Index")
+    axes[0, 2].set_ylabel("Hand Distance to Target")
+    axes[0, 2].set_title("Hand Distance Over Actions with Fatigue Detection")
+    axes[0, 2].legend()
+    axes[0, 2].grid(True)
     
     plt.tight_layout()
     plt.show()

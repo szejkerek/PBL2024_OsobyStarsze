@@ -6,7 +6,7 @@ from performance_comparison import compare_hand_performance
 from game_stats import *
 from newStats import *
 
-file_name = "data2.json"
+file_name = "dataNewBig.json"
 with open(file_name, "r") as file:
     json_data = json.load(file)
 
@@ -14,10 +14,11 @@ game = Game(file_name, json_data)
 
 
 # # # Hand heatmaps
+is_ambidextrous(game)
 #plot_hand_stats(game)
 #analyze_and_plot_hand_distance(game)
 #analyze_hand_to_object_times(game)
-visualize_and_calculate_metrics(game)
+#visualize_and_calculate_metrics(game)
 #visualize_hand_speeds(game, rolling_window = 5)
 
 # # # Hand analysis
