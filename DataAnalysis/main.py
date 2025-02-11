@@ -14,11 +14,11 @@ game = Game(file_name, json_data)
 
 
 # # # Hand heatmaps
-plot_hand_stats(game)
-analyze_and_plot_hand_distance(game)
-analyze_hand_to_object_times(game)
+#plot_hand_stats(game)
+#analyze_and_plot_hand_distance(game)
+#analyze_hand_to_object_times(game)
 visualize_and_calculate_metrics(game)
-visualize_hand_speeds(game, rolling_window = 5)
+#visualize_hand_speeds(game, rolling_window = 5)
 
 # # # Hand analysis
 # # plot_speed_over_time(game.actions)

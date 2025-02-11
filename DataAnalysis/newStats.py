@@ -261,7 +261,7 @@ def analyze_hand_to_object_times(game):
     sns.boxplot(x=hand_movement_times, ax=ax1, color="orange", width=0.2, boxprops={'alpha': 0.6})
     ax1.axvline(stats["Mean"], color="red", linestyle="--", label=f"Mean: {stats['Mean']:.2f}s")
     ax1.axvline(stats["Median"], color="blue", linestyle="-.", label=f"Median: {stats['Median']:.2f}s")
-    ax1.set_title("Histogram & Boxplot")
+    ax1.set_title("Distribution of Hand Movement Times (Histogram & Boxplot)")
     ax1.set_xlabel("Time (seconds)")
     ax1.set_ylabel("Frequency")
     ax1.legend()
@@ -271,7 +271,7 @@ def analyze_hand_to_object_times(game):
     sns.kdeplot(hand_movement_times, ax=ax2, color="blue", fill=True, alpha=0.6)
     ax2.axvline(stats["Mean"], color="red", linestyle="--", label=f"Mean: {stats['Mean']:.2f}s")
     ax2.axvline(stats["Median"], color="blue", linestyle="-.", label=f"Median: {stats['Median']:.2f}s")
-    ax2.set_title("Density Plot (KDE)")
+    ax2.set_title("Density of Hand Movement Times (KDE)")
     ax2.set_xlabel("Time (seconds)")
     ax2.legend()
 
@@ -290,7 +290,7 @@ def analyze_hand_to_object_times(game):
     ax4 = axes[1, 1]
     ax4.scatter(range(len(hand_movement_times)), hand_movement_times, alpha=0.6, label="Data Points", color="blue")
     ax4.axhline(stats["Mean"], color="red", linestyle="--", label=f"Mean: {stats['Mean']:.2f}s")
-    ax4.set_title("Scatter Plot of Movement Times")
+    ax4.set_title("Scatter Plot of Time Taken to Reach for an Object")
     ax4.set_xlabel("Sample Index")
     ax4.set_ylabel("Time (seconds)")
     ax4.legend()
@@ -336,18 +336,22 @@ def plot_hand_stats(game_data):
     # KDE Heatmaps (X-Z plane)
     sns.kdeplot(x=all_left_x, y=all_left_z, cmap="Reds", shade=True, ax=axes[0, 0])
     axes[0, 0].set_title("Left Hand KDE (X-Z Plane)")
+    axes[0,0].set_xlabel("X Position")
+    axes[0,0].set_ylabel("Z Position")
     
     sns.kdeplot(x=all_right_x, y=all_right_z, cmap="Blues", shade=True, ax=axes[0, 1])
     axes[0, 1].set_title("Right Hand KDE (X-Z Plane)")
+    axes[0,1].set_xlabel("X Position")
+    axes[0,1].set_ylabel("Z Position")
     
     # 3D Scatter Plot
     ax_3d = fig.add_subplot(2, 3, 3, projection='3d')
     ax_3d.scatter(all_left_x, all_left_y, all_left_z, c='red', label='Left Hand', alpha=0.6)
     ax_3d.scatter(all_right_x, all_right_y, all_right_z, c='blue', label='Right Hand', alpha=0.6)
     ax_3d.set_title("3D Scatter Plot of Hand Positions")
-    ax_3d.set_xlabel("X")
-    ax_3d.set_ylabel("Y")
-    ax_3d.set_zlabel("Z")
+    ax_3d.set_xlabel("X Position")
+    ax_3d.set_ylabel("Y Position")
+    ax_3d.set_zlabel("Z Position")
     ax_3d.legend()
     
     # Movement Trajectories (X-Z)
@@ -361,9 +365,13 @@ def plot_hand_stats(game_data):
     # Box Plots for X, Y, Z
     sns.boxplot(data=[all_left_x, all_right_x], ax=axes[1, 1])
     axes[1, 1].set_title("Box Plot of X Positions")
+    axes[1, 1].set_ylabel("X Position")
+    axes[1, 1].set_xticklabels(["Left Hand", "Right Hand"])
     
     sns.boxplot(data=[all_left_y, all_right_y], ax=axes[1, 2])
     axes[1, 2].set_title("Box Plot of Y Positions")
+    axes[1, 2].set_ylabel("Y Position")
+    axes[1, 2].set_xticklabels(["Left Hand", "Right Hand"]) 
     
     plt.tight_layout()
     plt.show()
@@ -432,11 +440,13 @@ def analyze_and_plot_hand_distance(game):
     sns.boxplot(y=hand_distances, ax=axes[1, 0], color='skyblue')
     axes[1, 0].set_title("Boxplot of Hand Distances")
     axes[1, 0].set_ylabel("Hand Distance to Target")
+    axes[1, 0].set_xlabel("Hand Distance Distribution")
     
     # Violin Plot
     sns.violinplot(y=hand_distances, ax=axes[1, 1], color='lightcoral')
     axes[1, 1].set_title("Violin Plot of Hand Distances")
     axes[1, 1].set_ylabel("Hand Distance to Target")
+    axes[1, 1].set_xlabel("Hand Distance Distribution")
     
     plt.tight_layout()
     plt.show()
