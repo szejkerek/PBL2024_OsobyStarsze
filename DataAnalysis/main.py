@@ -4,65 +4,31 @@ from hand_analysis import *
 from reaction_analysis import plot_reaction_time_distribution, plot_aim_accuracy
 from performance_comparison import compare_hand_performance
 from game_stats import *
+from print_stats import *
 from newStats import *
 
 file_name = "dataNewBig.json"
 with open(file_name, "r") as file:
     json_data = json.load(file)
+5
+VR = Game(file_name, json_data)
 
-game = Game(file_name, json_data)
+file_name = "fakeKinect.json"
+with open(file_name, "r") as file:
+    json_data = json.load(file)
 
-
-# # # Hand heatmaps
-is_ambidextrous(game)
-#plot_hand_stats(game)
-#analyze_and_plot_hand_distance(game)
-#analyze_hand_to_object_times(game)
-#visualize_and_calculate_metrics(game)
-#visualize_hand_speeds(game, rolling_window = 5)
-
-# # # Hand analysis
-# # plot_speed_over_time(game.actions)
-# # plot_hand_movement_3d(game.actions, "right")
-# # plot_hand_movement_3d(game.actions, "left")
-
-# # # Reaction and accuracy analysis
-# # plot_reaction_time_distribution(game.actions)
-# plot_aim_accuracy(game.actions)
-
-# # Performance comparison
-# compare_hand_performance(game.actions)
+FakeKinect = Game(file_name, json_data)
 
 
-# results = {
-#     "Game Duration": game_duration(game),
-#     "Average Reaction Time": average_reach_time(game),
-#     "Reaction Time Std Dev": reach_time_standard_deviation(game),
-#     "Reaction Time Percentiles": reach_time_percentiles(game),
-#     "Hand Velocity (Avg)": hand_velocity_analysis(game),
-#     "Hand Acceleration (Avg)": hand_acceleration_analysis(game),
-#     "Reaction Time Clusters": kmeans_cluster_reach_times(game),
-#     "Successful Reaches (%)": successful_reaches_ratio(game),
-#     "Hand Usage (%)": right_vs_left_hand_usage(game),
-#     "Distance Traveled per Hand": average_distance_traveled_per_hand(game),
-# }
+is_ambidextrous(VR)
 
+plot_hand_stats(VR)
+analyze_hand_to_object_times(VR, 0.1)
+analyze_and_plot_hand_distance(VR)
+visualize_and_calculate_metrics(VR)
+visualize_hand_speeds(VR, rolling_window = 5)
 
-# # Handle warnings
-# warnings = []
-
-# if len(results["Reaction Time Clusters"]) < 3:
-#     warnings.append("⚠️ Warning: Clustering found fewer groups than expected (insufficient unique data).")
-
-# # Pretty Print Results
-# print("\n📊 GAME STATISTICS 📊")
-# print("=" * 40)
-# for key, value in results.items():
-#     print(f"{key:35} | {value}")
-# print("=" * 40)
-
-# # Display warnings if any
-# if warnings:
-#     print("\n⚠️ WARNINGS ⚠️")
-#     for warning in warnings:
-#         print(warning)
+compare_hand_speed_distributions(VR, FakeKinect)
+compare_reaction_time_distributions(VR, FakeKinect, 0.1)
+compare_hand_distance_to_target(VR, FakeKinect, 0.08)
+compare_frame_position_distributions(VR, FakeKinect, 0.25)

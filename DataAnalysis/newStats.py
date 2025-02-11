@@ -292,13 +292,26 @@ def visualize_and_calculate_metrics(game):
 
     return stats_base_df, stats_target_df
 
-def analyze_hand_to_object_times(game):
+def analyze_hand_to_object_times(game, bin_size=0.05):
+    """
+    Analyzes hand movement times and groups them into bins of a specified size.
+
+    Parameters:
+    - game: An instance of the Game class containing actions.
+    - bin_size: The size of the bins for grouping reaction times (default: 0.05s).
+    """
+
     # Extract hand movement times, filtering only values >= 0
     hand_movement_times = np.array([action.hand_movement_to_object_time for action in game.actions if action.hand_movement_to_object_time >= 0])
 
     if hand_movement_times.size == 0:
         print("No valid hand movement times found.")
         return
+
+    # Group reaction times into bins of specified size
+    bin_edges = np.arange(0, np.max(hand_movement_times) + bin_size, bin_size)
+    bin_labels = [f"{round(edge, 2)}-{round(edge + bin_size, 2)}" for edge in bin_edges[:-1]]
+    binned_times = pd.cut(hand_movement_times, bins=bin_edges, labels=bin_labels, include_lowest=True)
 
     # Compute statistics
     stats = {
@@ -314,19 +327,19 @@ def analyze_hand_to_object_times(game):
     for key, value in stats.items():
         print(f"{key}: {value:.2f} seconds")
 
+    # Count occurrences per bin
+    bin_counts = pd.value_counts(binned_times, sort=False)
+
     # Create plots
     fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
-    # Histogram & Boxplot Combined
+    # Histogram with grouped bins
     ax1 = axes[0, 0]
-    sns.histplot(hand_movement_times, bins=20, kde=False, ax=ax1, color="skyblue", edgecolor="black")
-    sns.boxplot(x=hand_movement_times, ax=ax1, color="orange", width=0.2, boxprops={'alpha': 0.6})
-    ax1.axvline(stats["Mean"], color="red", linestyle="--", label=f"Mean: {stats['Mean']:.2f}s")
-    ax1.axvline(stats["Median"], color="blue", linestyle="-.", label=f"Median: {stats['Median']:.2f}s")
-    ax1.set_title("Distribution of Hand Movement Times (Histogram & Boxplot)")
-    ax1.set_xlabel("Time (seconds)")
+    bin_counts.plot(kind="bar", color="skyblue", edgecolor="black", ax=ax1)
+    ax1.set_xticklabels(bin_labels, rotation=45, ha="right")
+    ax1.set_title(f"Grouped Reaction Time Distribution ({bin_size}s bins)")
+    ax1.set_xlabel("Reaction Time Range (s)")
     ax1.set_ylabel("Frequency")
-    ax1.legend()
 
     # Density Plot (KDE)
     ax2 = axes[0, 1]
@@ -359,6 +372,7 @@ def analyze_hand_to_object_times(game):
 
     plt.tight_layout()
     plt.show()
+
 
 
 
