@@ -172,6 +172,9 @@ public class DataTracker : MonoBehaviour
             RecordHand();
             nextRecordTime = Time.time + handDataRecordInterval;
         }
+        
+        currentGameData.endTimestamp = Time.time;
+        currentGameData.overallGameTime = currentGameData.endTimestamp - currentGameData.startTimestamp;
     }
 
     private void RecordHand()
@@ -227,8 +230,7 @@ public class DataTracker : MonoBehaviour
             return;
         }
 
-        currentGameData.endTimestamp = Time.time;
-        currentGameData.overallGameTime = currentGameData.endTimestamp - currentGameData.startTimestamp;
+
 
         try
         {

@@ -1,10 +1,121 @@
 import numpy as np
 import scipy.stats as stats
-
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import logging
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import entropy
 from scipy.stats import entropy, skew, kurtosis, iqr, mode
+
+
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+def analyze_game_data(games_list):
+    """
+    Analyzes game data to extract correlations between key performance indicators.
+    This function processes game action data, extracts key metrics, and generates statistical plots.
+
+    - Position & Speed Analysis
+    - Hand Synchronization & Performance
+    - Accuracy vs Score
+    - Movement Efficiency vs Score
+    - Performance vs Reaction Time
+    
+    Parameters:
+        games_list (list): List of game objects containing player actions and performance data.
+    """
+    
+    logging.info("Starting game data analysis.")
+    data = []
+    
+    # Iterate over each game session
+    for game in games_list:
+        for action in game.actions:
+            
+            # Validate frame data availability
+            if not action.right_hand_frames or not action.left_hand_frames:
+                logging.warning("Skipping action due to missing hand frame data.")
+                continue
+            
+            # Calculate average speed for each hand
+            right_hand_speed = sum(frame.speed for frame in action.right_hand_frames) / len(action.right_hand_frames)
+            left_hand_speed = sum(frame.speed for frame in action.left_hand_frames) / len(action.left_hand_frames)
+
+            # Calculate average position for each hand
+            right_hand_avg_pos = calculate_average_position(action.right_hand_frames)
+            left_hand_avg_pos = calculate_average_position(action.left_hand_frames)
+
+            # Collect relevant data points
+            data.append({
+                "reaction_time": action.reaction_time,
+                "hand_movement_time": action.hand_movement_to_object_time,
+                "hand_accuracy": action.hand_distance_to_target,
+                "right_hand_speed": right_hand_speed,
+                "left_hand_speed": left_hand_speed,
+                "right_hand_pos_x": right_hand_avg_pos["x"],
+                "right_hand_pos_y": right_hand_avg_pos["y"],
+                "right_hand_pos_z": right_hand_avg_pos["z"],
+                "left_hand_pos_x": left_hand_avg_pos["x"],
+                "left_hand_pos_y": left_hand_avg_pos["y"],
+                "left_hand_pos_z": left_hand_avg_pos["z"],
+                "score": game.overall_score,
+                "game_time": game.overall_game_time
+            })
+    
+    if not data:
+        logging.error("No valid data collected. Aborting analysis.")
+        return
+    
+    # Convert to DataFrame
+    df = pd.DataFrame(data)
+    
+    # Compute correlation matrix
+    corr = df.corr()
+    
+    # Plot heatmap of correlations
+    plot_correlation_matrix(corr)
+    
+    # Generate scatter plots for specific correlations
+    generate_scatter_plots(df)
+
+def calculate_average_position(frames):
+    """Calculates the average position (x, y, z) from a list of frames."""
+    return {
+        "x": sum(frame.position["x"] for frame in frames) / len(frames),
+        "y": sum(frame.position["y"] for frame in frames) / len(frames),
+        "z": sum(frame.position["z"] for frame in frames) / len(frames),
+    }
+
+def plot_correlation_matrix(corr):
+    """Plots a heatmap of the correlation matrix for game metrics."""
+    plt.figure(figsize=(12, 8))
+    sns.heatmap(corr, annot=True, cmap="coolwarm", fmt=".2f", linewidths=0.5)
+    plt.title("Correlation Matrix of Game Data")
+    plt.show()
+
+def generate_scatter_plots(df):
+    """Generates scatter plots with regression lines for key correlations."""
+    plot_correlation(df, "reaction_time", "score", "Reaction Time vs Score")
+    plot_correlation(df, "hand_movement_time", "score", "Hand Movement Time vs Score")
+    plot_correlation(df, "hand_accuracy", "score", "Hand Accuracy vs Score")
+    plot_correlation(df, "right_hand_speed", "score", "Right Hand Speed vs Score")
+    plot_correlation(df, "left_hand_speed", "score", "Left Hand Speed vs Score")
+
+def plot_correlation(df, x_col, y_col, title):
+    """Helper function to plot scatter plots with regression lines."""
+    plt.figure(figsize=(8, 6))
+    sns.regplot(x=df[x_col], y=df[y_col], scatter_kws={"s": 10}, line_kws={"color": "red"})
+    plt.xlabel(x_col.replace("_", " ").title())
+    plt.ylabel(y_col.replace("_", " ").title())
+    plt.title(title)
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.show()
+
+
+
 def kl_divergence(p, q, bin_width=0.05):
     """
     Compute KL divergence between two distributions using histograms with custom bin width.

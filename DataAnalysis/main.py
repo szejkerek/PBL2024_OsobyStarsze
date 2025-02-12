@@ -20,15 +20,17 @@ with open(file_name, "r") as file:
 FakeKinect = Game(file_name, json_data)
 
 
-is_ambidextrous(VR)
+analyze_game_data([VR, FakeKinect])
 
-plot_hand_stats(VR)
-analyze_hand_to_object_times(VR, 0.1)
-analyze_and_plot_hand_distance(VR)
-visualize_and_calculate_metrics(VR)
-visualize_hand_speeds(VR, rolling_window = 5)
+# is_ambidextrous(VR)
 
-compare_hand_speed_distributions(VR, FakeKinect)
-compare_reaction_time_distributions(VR, FakeKinect, 0.1)
-compare_hand_distance_to_target(VR, FakeKinect, 0.08)
-compare_frame_position_distributions(VR, FakeKinect, 0.25)
+# plot_hand_stats(VR)
+# analyze_hand_to_object_times(VR, 0.1)
+# analyze_and_plot_hand_distance(VR)
+# visualize_and_calculate_metrics(VR)
+# visualize_hand_speeds(VR, rolling_window = 5)
+
+# compare_hand_speed_distributions(VR, FakeKinect)
+# compare_reaction_time_distributions(VR, FakeKinect, 0.1)
+# compare_hand_distance_to_target(VR, FakeKinect, 0.08)
+# compare_frame_position_distributions(VR, FakeKinect, 0.25)
