@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     public string selectedTag;
 
     [Header("Score and Health")]
-    public int points;
+    public int points = 0;
     public int health = 3; // Player health
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text healthText;

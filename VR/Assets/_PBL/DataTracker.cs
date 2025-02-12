@@ -26,7 +26,7 @@ public class DataTracker : MonoBehaviour
     private float currentActionStartTime = 0.0f;
     public Transform currentTarget;
     
-    
+    GameManager gameManager;
     private float nextRecordTime;
 
     public void SetActionStartTimestamp()
@@ -51,7 +51,7 @@ public class DataTracker : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
+        
         InitializeFilePath();
         ResetGameData();
     }
@@ -172,7 +172,8 @@ public class DataTracker : MonoBehaviour
             RecordHand();
             nextRecordTime = Time.time + handDataRecordInterval;
         }
-        
+
+        currentGameData.overallScore = GameManager.instance.points;
         currentGameData.endTimestamp = Time.time;
         currentGameData.overallGameTime = currentGameData.endTimestamp - currentGameData.startTimestamp;
     }
