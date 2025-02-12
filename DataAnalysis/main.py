@@ -7,20 +7,28 @@ from game_stats import *
 from print_stats import *
 from newStats import *
 
-file_name = "dataNewBig.json"
+file_name = "vr1.json"
 with open(file_name, "r") as file:
     json_data = json.load(file)
-5
-VR = Game(file_name, json_data)
+VR1 = Game(file_name, json_data)
 
-file_name = "fakeKinect.json"
+file_name = "vr2.json"
 with open(file_name, "r") as file:
     json_data = json.load(file)
+VR2 = Game(file_name, json_data)
+file_name = "vr3.json"
+with open(file_name, "r") as file:
+    json_data = json.load(file)
+VR3 = Game(file_name, json_data)
+file_name = "vr4.json"
+with open(file_name, "r") as file:
+    json_data = json.load(file)
+VR4 = Game(file_name, json_data)
 
-FakeKinect = Game(file_name, json_data)
 
 
-analyze_game_data([VR, FakeKinect])
+
+# analyze_game_data([VR1, VR2, VR3, VR4])
 
 # is_ambidextrous(VR)
 
@@ -30,7 +38,7 @@ analyze_game_data([VR, FakeKinect])
 # visualize_and_calculate_metrics(VR)
 # visualize_hand_speeds(VR, rolling_window = 5)
 
-# compare_hand_speed_distributions(VR, FakeKinect)
-# compare_reaction_time_distributions(VR, FakeKinect, 0.1)
-# compare_hand_distance_to_target(VR, FakeKinect, 0.08)
-# compare_frame_position_distributions(VR, FakeKinect, 0.25)
+compare_hand_speed_distributions(VR4, VR2)
+compare_reaction_time_distributions(VR4, VR2, 0.1)
+compare_hand_distance_to_target(VR4, VR2, 0.08)
+compare_frame_position_distributions(VR4, VR2, 0.25)
