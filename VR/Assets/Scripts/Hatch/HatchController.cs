@@ -84,7 +84,7 @@ public class HatchController : MonoBehaviour
         {
             if (door != null)
             {
-                door.velocity = Vector3.zero;
+                door.linearVelocity = Vector3.zero;
                 door.angularVelocity = Vector3.zero;
                 // Apply downward impulse force
                 door.AddForce(Vector3.down * releaseImpulseStrength, ForceMode.Impulse);
